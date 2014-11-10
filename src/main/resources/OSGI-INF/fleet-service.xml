@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.nuxeo.fleet.service.FleetComponent">
+
+  <implementation class="org.nuxeo.fleet.service.FleetComponent"/>
+
+  <service>
+    <provide interface="org.nuxeo.fleet.service.FleetService"/>
+  </service>
+
+  <extension-point name="configuration">
+    <object class="org.nuxeo.fleet.service.FleetConfigurationDescriptor" />
+  </extension-point>
+
+</component>

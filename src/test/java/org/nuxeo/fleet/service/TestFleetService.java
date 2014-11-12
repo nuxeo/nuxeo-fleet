@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
+import org.nuxeo.fleet.Machines;
 import org.nuxeo.fleet.Unit;
 import org.nuxeo.fleet.Units;
 import org.nuxeo.runtime.test.runner.Deploy;
@@ -74,5 +75,11 @@ public class TestFleetService {
         units = units.getNextPage();
         assertNotNull(units);
         assertNotNull(units.getUnits());
+    }
+
+    @Test
+    public void testMachines() {
+        Machines machines = fleetService.listMachines();
+        assertNotNull(machines);
     }
 }

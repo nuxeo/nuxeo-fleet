@@ -15,37 +15,32 @@
  *     Nuxeo
  */
 
-package org.nuxeo.fleet.service;
+package org.nuxeo.fleet;
 
-import org.nuxeo.fleet.Machines;
-import org.nuxeo.fleet.PaginableResult;
-import org.nuxeo.fleet.Unit;
-import org.nuxeo.fleet.Units;
+import java.util.List;
 
 /**
  * @author <a href="mailto:ak@nuxeo.com">Arnaud Kervern</a>
  * @since 0.1
  */
-public interface FleetService {
-    public static enum UnitSate {
-        inactive, loaded, launched;
+public class Machines extends PaginableResult<Machine> {
+
+    public List<Machine> machines;
+
+    @Override
+    protected String getResource() {
+        return "machines";
     }
 
-    Unit submitUnit(Unit unit);
+    public List<Machine> getMachines() {
+        return machines;
+    }
 
-    Unit getUnit(String unitName);
+    public void setMachines(List<Machine> machines) {
+        this.machines = machines;
+    }
 
-    boolean startUnit(String unitName);
-
-    boolean stopUnit(String unitName);
-
-    boolean destroyUnit(String unitName);
-
-    boolean setUnitState(String unitName, UnitSate state);
-
-    Units listUnits();
-
-    Machines listMachines();
-
-    <T extends PaginableResult> T getNextPage(String token, String resource, Class<T> clazz);
+    public Machines getNextPage() {
+        return getNextPage(Machines.class);
+    }
 }

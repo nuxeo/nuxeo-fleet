@@ -24,7 +24,7 @@ package org.nuxeo.fleet;
 public class Machine {
     protected String id;
 
-    protected String primaryIp;
+    protected String primaryIP;
 
     protected String metadata;
 
@@ -36,12 +36,12 @@ public class Machine {
         this.id = id;
     }
 
-    public String getPrimaryIp() {
-        return primaryIp;
+    public String getPrimaryIP() {
+        return primaryIP;
     }
 
-    public void setPrimaryIp(String primaryIp) {
-        this.primaryIp = primaryIp;
+    public void setPrimaryIP(String primaryIP) {
+        this.primaryIP = primaryIP;
     }
 
     public String getMetadata() {
@@ -61,7 +61,7 @@ public class Machine {
 
         if (id != null ? !id.equals(machine.id) : machine.id != null) return false;
         if (metadata != null ? !metadata.equals(machine.metadata) : machine.metadata != null) return false;
-        if (primaryIp != null ? !primaryIp.equals(machine.primaryIp) : machine.primaryIp != null) return false;
+        if (primaryIP != null ? !primaryIP.equals(machine.primaryIP) : machine.primaryIP != null) return false;
 
         return true;
     }
@@ -69,7 +69,7 @@ public class Machine {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (primaryIp != null ? primaryIp.hashCode() : 0);
+        result = 31 * result + (primaryIP != null ? primaryIP.hashCode() : 0);
         result = 31 * result + (metadata != null ? metadata.hashCode() : 0);
         return result;
     }

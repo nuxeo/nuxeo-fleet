@@ -18,7 +18,6 @@
 package org.nuxeo.fleet.service;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.ws.rs.core.Response;
 
@@ -26,7 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.nuxeo.fleet.Error;
-import org.nuxeo.fleet.Machine;
+import org.nuxeo.fleet.Machines;
 import org.nuxeo.fleet.PaginableResult;
 import org.nuxeo.fleet.Unit;
 import org.nuxeo.fleet.Units;
@@ -131,16 +130,11 @@ public class FleetComponent extends DefaultComponent implements FleetService {
     }
 
     @Override
-    public List<Machine> listMachines() {
-        return null;
-    }
+    public Machines listMachines() {
+        ClientResponse response = getClientReponse("/machines");
 
-    protected <V> V clientResponseToClass(ClientResponse response, Class<V> clazz) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(response.getEntityInputStream(), clazz);
-        } catch (IOException e) {
-            log.warn(e, e);
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            return clientResponseToClass(response, Machines.class);
         }
         return null;
     }
@@ -155,6 +149,16 @@ public class FleetComponent extends DefaultComponent implements FleetService {
 
         ClientResponse response = webResource.get(ClientResponse.class);
         return clientResponseToClass(response, clazz);
+    }
+
+    protected <V> V clientResponseToClass(ClientResponse response, Class<V> clazz) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(response.getEntityInputStream(), clazz);
+        } catch (IOException e) {
+            log.warn(e, e);
+        }
+        return null;
     }
 
     protected ClientResponse getClientReponse(String path) {

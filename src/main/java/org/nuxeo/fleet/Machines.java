@@ -25,11 +25,16 @@ import java.util.List;
  */
 public class Machines extends PaginableResult<Machine> {
 
-    public List<Machine> machines;
+    protected List<Machine> machines;
 
     @Override
     protected String getResource() {
         return "machines";
+    }
+
+    @Override
+    protected List<Machine> getContent() {
+        return getMachines();
     }
 
     public List<Machine> getMachines() {

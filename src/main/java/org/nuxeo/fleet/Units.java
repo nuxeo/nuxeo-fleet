@@ -32,6 +32,11 @@ public class Units extends PaginableResult<Unit> {
         return "units";
     }
 
+    @Override
+    protected List<Unit> getContent() {
+        return getUnits();
+    }
+
     public List<Unit> getUnits() {
         return units;
     }

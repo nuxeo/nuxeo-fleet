@@ -17,6 +17,9 @@
 
 package org.nuxeo.fleet;
 
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.nuxeo.fleet.service.FleetService;
 import org.nuxeo.runtime.api.Framework;
 
@@ -27,6 +30,8 @@ import org.nuxeo.runtime.api.Framework;
 public abstract class PaginableResult<T> {
 
     protected abstract String getResource();
+
+    protected abstract List<T> getContent();
 
     protected String nextPageToken;
 
@@ -41,5 +46,9 @@ public abstract class PaginableResult<T> {
 
     public void setNextPageToken(String nextPageToken) {
         this.nextPageToken = nextPageToken;
+    }
+
+    public boolean hasNextPage() {
+        return StringUtils.isEmpty(nextPageToken);
     }
 }

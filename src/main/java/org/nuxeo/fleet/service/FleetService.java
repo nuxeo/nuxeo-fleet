@@ -27,6 +27,10 @@ import org.nuxeo.fleet.Unit;
  * @since 0.1
  */
 public interface FleetService {
+    public static enum UnitSate {
+        inactive, loaded, launched;
+    }
+
     Unit submitUnit(Unit unit);
 
     Unit getUnit(String unitName);
@@ -37,7 +41,7 @@ public interface FleetService {
 
     boolean destroyUnit(String unitName);
 
-    boolean setUnitState(String unitName, String state);
+    boolean setUnitState(String unitName, UnitSate state);
 
     List<Unit> listUnits();
 

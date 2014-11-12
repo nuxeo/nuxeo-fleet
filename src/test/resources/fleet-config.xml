@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.nuxeo.fleet.test">
+
+  <extension target="org.nuxeo.fleet.service.FleetService" point="configuration">
+    <configuration>
+      <endpoint>http://localhost:14002</endpoint>
+    </configuration>
+  </extension>
+
+</component>

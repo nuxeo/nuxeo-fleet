@@ -19,6 +19,8 @@ package org.nuxeo.fleet;
 
 import java.util.List;
 
+import org.nuxeo.fleet.service.FleetService.UnitSate;
+
 /**
  * @author <a href="mailto:ak@nuxeo.com">Arnaud Kervern</a>
  * @since 0.1
@@ -28,11 +30,11 @@ public class Unit {
 
     protected List<UnitOption> options;
 
-    protected String desiredState;
+    protected UnitSate desiredState;
 
-    protected String currentState;
+    protected UnitSate currentState;
 
-    protected String machineId;
+    protected String machineID;
 
     public String getName() {
         return name;
@@ -50,28 +52,28 @@ public class Unit {
         this.options = options;
     }
 
-    public String getDesiredState() {
+    public UnitSate getDesiredState() {
         return desiredState;
     }
 
-    public void setDesiredState(String desiredState) {
+    public void setDesiredState(UnitSate desiredState) {
         this.desiredState = desiredState;
     }
 
-    public String getCurrentState() {
+    public UnitSate getCurrentState() {
         return currentState;
     }
 
-    public void setCurrentState(String currentState) {
+    public void setCurrentState(UnitSate currentState) {
         this.currentState = currentState;
     }
 
-    public String getMachineId() {
-        return machineId;
+    public String getMachineID() {
+        return machineID;
     }
 
-    public void setMachineId(String machineId) {
-        this.machineId = machineId;
+    public void setMachineID(String machineID) {
+        this.machineID = machineID;
     }
 
     @Override
@@ -83,7 +85,7 @@ public class Unit {
 
         if (currentState != null ? !currentState.equals(unit.currentState) : unit.currentState != null) return false;
         if (desiredState != null ? !desiredState.equals(unit.desiredState) : unit.desiredState != null) return false;
-        if (machineId != null ? !machineId.equals(unit.machineId) : unit.machineId != null) return false;
+        if (machineID != null ? !machineID.equals(unit.machineID) : unit.machineID != null) return false;
         if (name != null ? !name.equals(unit.name) : unit.name != null) return false;
         if (options != null ? !options.equals(unit.options) : unit.options != null) return false;
 
@@ -96,7 +98,7 @@ public class Unit {
         result = 31 * result + (options != null ? options.hashCode() : 0);
         result = 31 * result + (desiredState != null ? desiredState.hashCode() : 0);
         result = 31 * result + (currentState != null ? currentState.hashCode() : 0);
-        result = 31 * result + (machineId != null ? machineId.hashCode() : 0);
+        result = 31 * result + (machineID != null ? machineID.hashCode() : 0);
         return result;
     }
 }

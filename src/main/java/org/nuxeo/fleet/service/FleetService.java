@@ -39,6 +39,10 @@ public interface FleetService {
 
     boolean stopUnit(String unitName);
 
+    boolean unloadUnit(String unitName);
+
+    boolean loadUnit(String unitName);
+
     boolean destroyUnit(String unitName);
 
     boolean setUnitState(String unitName, UnitSate state);

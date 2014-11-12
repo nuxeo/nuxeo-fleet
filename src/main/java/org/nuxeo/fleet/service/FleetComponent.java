@@ -19,6 +19,7 @@ package org.nuxeo.fleet.service;
 
 import java.io.IOException;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.logging.Log;
@@ -94,29 +95,57 @@ public class FleetComponent extends DefaultComponent implements FleetService {
             return clientResponseToClass(response, Unit.class);
         } else {
             Error error = clientResponseToClass(response, Error.class);
-            log.warn(error);
+            log.info(error);
         }
         return null;
     }
 
     @Override
     public boolean startUnit(String unitName) {
-        return false;
+        return setUnitState(unitName, UnitSate.launched);
     }
 
     @Override
     public boolean stopUnit(String unitName) {
-        return false;
+        return setUnitState(unitName, UnitSate.loaded);
+    }
+
+    @Override
+    public boolean unloadUnit(String unitName) {
+        return setUnitState(unitName, UnitSate.inactive);
+    }
+
+    @Override
+    public boolean loadUnit(String unitName) {
+        return stopUnit(unitName);
     }
 
     @Override
     public boolean destroyUnit(String unitName) {
-        return false;
+        ClientResponse response = service.path("/units/" + unitName).delete(ClientResponse.class);
+
+        if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
+            return true;
+        } else {
+            Error error = clientResponseToClass(response, Error.class);
+            log.info(error);
+            return false;
+        }
     }
 
     @Override
     public boolean setUnitState(String unitName, UnitSate state) {
-        return false;
+        WebResource resource = service.path("/units/" + unitName);
+        String input = "{\"desiredState\":\"" + state.toString() + "\"}";
+        ClientResponse response = resource.type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, input);
+
+        if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
+            return true;
+        } else {
+            Error error = clientResponseToClass(response, Error.class);
+            log.warn(error);
+            return false;
+        }
     }
 
     @Override

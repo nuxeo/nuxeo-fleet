@@ -20,6 +20,7 @@ package org.nuxeo.fleet.service;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +29,7 @@ import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.fleet.Machines;
 import org.nuxeo.fleet.Unit;
 import org.nuxeo.fleet.Units;
+import org.nuxeo.fleet.service.FleetService.UnitSate;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
@@ -81,5 +83,21 @@ public class TestFleetService {
     public void testMachines() {
         Machines machines = fleetService.listMachines();
         assertNotNull(machines);
+    }
+
+    @Test
+    public void testStartService() {
+        Unit unit = fleetService.getUnit("nxio.nxio_000094.1.service");
+        fleetService.stopUnit(unit.getName());
+        assertEquals(UnitSate.loaded, unit.getCurrentState());
+
+        assertTrue(fleetService.startUnit(unit.getName()));
+        unit = fleetService.getUnit(unit.getName());
+
+        assertEquals(UnitSate.launched, unit.getDesiredState());
+        assertTrue(fleetService.stopUnit(unit.getName()));
+
+        unit = fleetService.getUnit(unit.getName());
+        assertEquals(UnitSate.loaded, unit.getDesiredState());
     }
 }

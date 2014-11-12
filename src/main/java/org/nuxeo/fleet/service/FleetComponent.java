@@ -27,7 +27,9 @@ import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.nuxeo.fleet.Error;
 import org.nuxeo.fleet.Machine;
+import org.nuxeo.fleet.PaginableResult;
 import org.nuxeo.fleet.Unit;
+import org.nuxeo.fleet.Units;
 import org.nuxeo.runtime.model.ComponentContext;
 import org.nuxeo.runtime.model.ComponentInstance;
 import org.nuxeo.runtime.model.DefaultComponent;
@@ -119,7 +121,12 @@ public class FleetComponent extends DefaultComponent implements FleetService {
     }
 
     @Override
-    public List<Unit> listUnits() {
+    public Units listUnits() {
+        ClientResponse response = getClientReponse("/units");
+
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            return clientResponseToClass(response, Units.class);
+        }
         return null;
     }
 
@@ -136,6 +143,18 @@ public class FleetComponent extends DefaultComponent implements FleetService {
             log.warn(e, e);
         }
         return null;
+    }
+
+    @Override
+    public <T extends PaginableResult> T getNextPage(String token, String resource, Class<T> clazz) {
+        if (!resource.startsWith("/")) {
+            resource = "/" + resource;
+        }
+        WebResource webResource = service.path(resource);
+        webResource.queryParam("nextPageToken", token);
+
+        ClientResponse response = webResource.get(ClientResponse.class);
+        return clientResponseToClass(response, clazz);
     }
 
     protected ClientResponse getClientReponse(String path) {

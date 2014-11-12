@@ -26,6 +26,7 @@ import org.junit.runner.RunWith;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.fleet.Unit;
+import org.nuxeo.fleet.Units;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
@@ -62,5 +63,16 @@ public class TestFleetService {
         Unit unit = fleetService.getUnit("nxio.nxio_000094.1.service");
         assertNotNull(unit);
         assertEquals("nxio.nxio_000094.1.service", unit.getName());
+    }
+
+    @Test
+    public void testGetUnits() {
+        Units units = fleetService.listUnits();
+        assertNotNull(units);
+        assertNotNull(units.getUnits());
+
+        units = units.getNextPage();
+        assertNotNull(units);
+        assertNotNull(units.getUnits());
     }
 }

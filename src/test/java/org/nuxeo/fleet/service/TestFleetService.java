@@ -22,12 +22,17 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.fleet.Machines;
 import org.nuxeo.fleet.Unit;
+import org.nuxeo.fleet.UnitOption;
+import org.nuxeo.fleet.UnitOption.Section;
 import org.nuxeo.fleet.Units;
 import org.nuxeo.fleet.service.FleetService.UnitSate;
 import org.nuxeo.runtime.test.runner.Deploy;
@@ -99,5 +104,47 @@ public class TestFleetService {
 
         unit = fleetService.getUnit(unit.getName());
         assertEquals(UnitSate.loaded, unit.getDesiredState());
+    }
+
+    @Test
+    public void testUnitCreation() throws IOException {
+        Unit unit = new Unit();
+        String serviceName = "MyService-" + RandomStringUtils.random(9, true, false) + ".service";
+
+        System.out.println(serviceName);
+
+        unit.setName(serviceName);
+        unit.setDesiredState(UnitSate.loaded);
+        unit.setDesiredState(UnitSate.launched);
+
+        UnitOption option = new UnitOption();
+        option.setName("ExecStart");
+        option.setSection(Section.Unit);
+        option.setValue("echo 0");
+
+        unit.addOption(option);
+
+        option = new UnitOption();
+        option.setName("FakeStatement");
+        option.setSection(Section.X_Fleet);
+        option.setValue("blabla");
+
+        unit.addOption(option);
+
+        String json = unit.toJSON();
+        System.out.println(json);
+        assertTrue(json.contains("X-Fleet"));
+
+        assertEquals(Section.UNKNOWN, Section.forValue("asdasd"));
+
+        assertNull(unit.getCurrentState());
+
+        unit = fleetService.submitUnit(unit);
+        assertNotNull(unit);
+
+        json = unit.toJSON();
+        System.out.println(json);
+
+        assertNotNull(unit.getCurrentState());
     }
 }

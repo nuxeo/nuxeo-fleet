@@ -17,14 +17,36 @@
 
 package org.nuxeo.fleet;
 
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonValue;
+
 /**
  * @author <a href="mailto:ak@nuxeo.com">Arnaud Kervern</a>
  * @since 0.1
  */
 public class UnitOption {
+
+    public enum Section {
+        Unit, Service, Socket, Install, X_Fleet, UNKNOWN;
+
+        @JsonCreator
+        public static Section forValue(String value) {
+            try {
+                return Section.valueOf(value.replaceAll("-", "_"));
+            } catch (IllegalArgumentException e) {
+                return UNKNOWN;
+            }
+        }
+
+        @JsonValue
+        public String toString() {
+            return super.toString().replaceAll("_", "-");
+        }
+    }
+
     protected String name;
 
-    protected String section;
+    protected Section section;
 
     protected String value;
 
@@ -36,11 +58,11 @@ public class UnitOption {
         this.name = name;
     }
 
-    public String getSection() {
+    public Section getSection() {
         return section;
     }
 
-    public void setSection(String section) {
+    public void setSection(Section section) {
         this.section = section;
     }
 
@@ -59,8 +81,8 @@ public class UnitOption {
 
         UnitOption that = (UnitOption) o;
 
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (section != null ? !section.equals(that.section) : that.section != null) return false;
+        if (name != that.name) return false;
+        if (section != that.section) return false;
         if (value != null ? !value.equals(that.value) : that.value != null) return false;
 
         return true;

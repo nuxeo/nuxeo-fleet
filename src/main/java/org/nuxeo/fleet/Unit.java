@@ -17,8 +17,12 @@
 
 package org.nuxeo.fleet;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.fleet.service.FleetService.UnitSate;
 
 /**
@@ -50,6 +54,13 @@ public class Unit {
 
     public void setOptions(List<UnitOption> options) {
         this.options = options;
+    }
+
+    public void addOption(UnitOption option) {
+        if (options == null) {
+            options = new ArrayList<>();
+        }
+        options.add(option);
     }
 
     public UnitSate getDesiredState() {
@@ -100,5 +111,13 @@ public class Unit {
         result = 31 * result + (currentState != null ? currentState.hashCode() : 0);
         result = 31 * result + (machineID != null ? machineID.hashCode() : 0);
         return result;
+    }
+
+    public String toJSON() {
+        try {
+            return new ObjectMapper().writeValueAsString(this);
+        } catch (IOException e) {
+            throw new ClientException(e);
+        }
     }
 }

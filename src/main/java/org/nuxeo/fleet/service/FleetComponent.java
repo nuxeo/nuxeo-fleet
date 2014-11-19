@@ -84,6 +84,21 @@ public class FleetComponent extends DefaultComponent implements FleetService {
 
     @Override
     public Unit submitUnit(Unit unit) {
+        if (!unit.getName().endsWith(".service")) {
+            throw new IllegalArgumentException("Unit name must be suffixed with '.service'");
+        }
+
+        WebResource resource = service.path("/units/" + unit.getName());
+        ClientResponse response = resource.type(MediaType.APPLICATION_JSON_TYPE).put(ClientResponse.class, unit.toJSON());
+
+        // XXX Should be 201 CREATED not 204.
+        if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
+            return getUnit(unit.getName());
+        } else {
+            Error error = clientResponseToClass(response, Error.class);
+            log.warn(error);
+        }
+
         return null;
     }
 
@@ -181,6 +196,10 @@ public class FleetComponent extends DefaultComponent implements FleetService {
     }
 
     protected <V> V clientResponseToClass(ClientResponse response, Class<V> clazz) {
+        if (response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
+            return null;
+        }
+
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(response.getEntityInputStream(), clazz);
